@@ -115,7 +115,7 @@ static void wifi_init_sta(void)
     }
 }
 
-esp_err_t uros_network_interface_initialize(void)
+esp_err_t uros_network_interface_initialize(void * arg)
 {
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {

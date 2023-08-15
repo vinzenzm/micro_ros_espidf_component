@@ -5,7 +5,7 @@ extern "C"
 {
 #endif
 
-esp_err_t uros_network_interface_initialize(void);
+esp_err_t uros_network_interface_initialize(void * arg);
 
 #ifdef __cplusplus
 }

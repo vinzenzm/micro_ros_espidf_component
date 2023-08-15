@@ -59,7 +59,7 @@ static void got_ip_event_handler(void *arg, esp_event_base_t event_base,
     ESP_LOGI(TAG, "~~~~~~~~~~~");
 }
 
-esp_err_t uros_network_interface_initialize(void)
+esp_err_t uros_network_interface_initialize(void * arg)
 {
     // Initialize TCP/IP network interface (should be called only once in application)
     ESP_ERROR_CHECK(esp_netif_init());
