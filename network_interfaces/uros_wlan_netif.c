@@ -29,6 +29,9 @@ static EventGroupHandle_t s_wifi_event_group;
 static const char *TAG = "wifi_station_netif";
 static int s_retry_num = 0;
 
+const char ssid[30] = "no_ssid";
+const char passkey[30] = "no_pass";
+
 
 static void event_handler(void* arg, esp_event_base_t event_base,
                                 int32_t event_id, void* event_data)
@@ -79,6 +82,11 @@ static void wifi_init_sta(void)
 #endif //CONFIG_PM_ENABLE *
         },
     };
+
+    memcpy( wifi_config.sta.ssid, ssid, 1 +  strlen(ssid));
+    memcpy( wifi_config.sta.password, passkey, 1 +  strlen(passkey));
+
+
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA) );
     ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config) );
     ESP_ERROR_CHECK(esp_wifi_start() );
@@ -106,17 +114,26 @@ static void wifi_init_sta(void)
      * happened. */
     if (bits & WIFI_CONNECTED_BIT) {
         ESP_LOGI(TAG, "connected to ap SSID:%s password:%s",
-                 ESP_WIFI_SSID, ESP_WIFI_PASS);
+                 ssid, passkey);
     } else if (bits & WIFI_FAIL_BIT) {
         ESP_LOGI(TAG, "Failed to connect to SSID:%s, password:%s",
-                 ESP_WIFI_SSID, ESP_WIFI_PASS);
+                 ssid, passkey);
     } else {
         ESP_LOGE(TAG, "UNEXPECTED EVENT");
     }
 }
 
-esp_err_t uros_network_interface_initialize(void * arg)
+esp_err_t uros_network_interface_initialize(char * _ssid, char * _passkey)
 {
+    
+    if (_ssid == NULL) {
+        strcpy(ssid, ESP_WIFI_SSID);
+        strcpy(passkey, ESP_WIFI_PASS);
+    } else {
+        strcpy(ssid, _ssid);
+        strcpy(passkey, _passkey);
+    }
+    
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
