@@ -29,8 +29,8 @@ static EventGroupHandle_t s_wifi_event_group;
 static const char *TAG = "wifi_station_netif";
 static int s_retry_num = 0;
 
-const char ssid[30] = "no_ssid";
-const char passkey[30] = "no_pass";
+const char ssid[30];
+const char passkey[30];
 
 
 static void event_handler(void* arg, esp_event_base_t event_base,
@@ -83,9 +83,8 @@ static void wifi_init_sta(void)
         },
     };
 
-    memcpy( wifi_config.sta.ssid, ssid, 1 +  strlen(ssid));
-    memcpy( wifi_config.sta.password, passkey, 1 +  strlen(passkey));
-
+    strcpy((char *)wifi_config.sta.ssid, ssid);
+    strcpy((char *)wifi_config.sta.password, passkey);
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA) );
     ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config) );
